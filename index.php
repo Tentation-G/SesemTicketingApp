@@ -49,7 +49,8 @@ if(isset($_GET['p'])){
             break;
 
         case 'home':
-                homeView();
+                listTicketsView();
+                //homeView();
             break;
 
         default:

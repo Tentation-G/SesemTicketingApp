@@ -1,0 +1,287 @@
+@use "variables" as *;
+
+// ============================================================
+//  SesemIT — Page : Nouveau ticket
+// ============================================================
+
+// ── En-tête de section ──────────────────────────────────────
+.form-section {
+    margin-bottom: 10px;
+
+    &__title {
+        font-family: $font-display;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: $blue;
+        padding-bottom: 10px;
+        border-bottom: 1px solid $border-subtle;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &::before {
+            content: "";
+            display: inline-block;
+            width: 3px;
+            height: 14px;
+            background: $blue;
+            border-radius: 2px;
+            box-shadow: 0 0 8px rgba($blue, 0.6);
+        }
+    }
+}
+
+// ── Grille de champs ────────────────────────────────────────
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 24px;
+
+    @media (max-width: 720px) {
+        grid-template-columns: 1fr;
+    }
+
+    &--3col {
+        grid-template-columns: 1fr 1fr 1fr;
+
+        @media (max-width: 900px) {
+            grid-template-columns: 1fr 1fr;
+        }
+        @media (max-width: 560px) {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+.form-col-full {
+    grid-column: 1 / -1;
+}
+
+// ── Groupe de champ ─────────────────────────────────────────
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: $text-secondary;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        user-select: none;
+
+        .required {
+            color: $blue;
+            font-size: 13px;
+            line-height: 1;
+        }
+
+        .label-hint {
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 0;
+            text-transform: none;
+            color: $text-muted;
+            margin-left: auto;
+        }
+    }
+}
+
+// ── Inputs / Select / Textarea ───────────────────────────────
+.form-control {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid $border-subtle;
+    border-radius: $border-radius-md;
+    color: $text-primary;
+    font-family: $font-body;
+    font-size: 13.5px;
+    font-weight: 400;
+    padding: 10px 14px;
+    width: 100%;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    transition:
+        border-color $transition-fast,
+        background $transition-fast,
+        box-shadow $transition-fast;
+    line-height: 1.5;
+
+    &::placeholder {
+        color: $text-muted;
+    }
+
+    &:hover:not(:focus):not(:disabled) {
+        border-color: $border-default;
+        background: rgba(255, 255, 255, 0.055);
+    }
+
+    &:focus {
+        border-color: rgba($blue, 0.55);
+        background: rgba($blue, 0.06);
+        box-shadow:
+            0 0 0 3px rgba($blue, 0.1),
+            inset 0 0 0 1px rgba($blue, 0.1);
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    // Erreur de validation
+    &.has-error {
+        border-color: rgba(239, 68, 68, 0.5);
+        background: rgba(239, 68, 68, 0.05);
+        &:focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+        }
+    }
+
+    option {
+        background: $surface-2;
+        color: $text-primary;
+    }
+}
+
+select.form-control {
+    cursor: pointer;
+    padding-right: 36px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23555b6e' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 13px center;
+
+    &:focus {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%234f8ef7' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+    max-height: 300px;
+    line-height: 1.65;
+}
+
+// ── Message d'erreur sous un champ ───────────────────────────
+.field-error {
+    font-size: 11.5px;
+    color: #f87171;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: -2px;
+
+    &::before {
+        content: "!";
+        width: 14px;
+        height: 14px;
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+}
+
+// ── Carte de formulaire ──────────────────────────────────────
+.form-card {
+    background: rgba($surface-2, 0.65);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid $border-subtle;
+    border-radius: $border-radius-lg;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    transition: border-color $transition-fast;
+
+    &:focus-within {
+        border-color: $border-default;
+    }
+}
+
+// ── Barre d'actions en bas ───────────────────────────────────
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 8px;
+
+    .form-actions__hint {
+        margin-right: auto;
+        font-size: 12px;
+        color: $text-muted;
+
+        span {
+            color: $blue;
+        }
+    }
+}
+
+// ── Filtre familles par marque (JS) ──────────────────────────
+// Transition douce quand les options apparaissent / disparaissent
+select.form-control[name="idFamille"] {
+    transition:
+        opacity $transition-fast,
+        border-color $transition-fast,
+        background $transition-fast,
+        box-shadow $transition-fast;
+
+    &.filtering {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+}
+
+// ── Indicateur de priorité visuel ───────────────────────────
+// Colore le select en fonction de la priorité choisie (via JS)
+.prio-indicator {
+    position: relative;
+
+    &::after {
+        content: "";
+        position: absolute;
+        right: 36px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        pointer-events: none;
+        transition:
+            background $transition-fast,
+            box-shadow $transition-fast;
+    }
+
+    &[data-prio="1"]::after {
+        background: #6b7280;
+    }
+    &[data-prio="2"]::after {
+        background: #22d3ee;
+        box-shadow: 0 0 6px rgba(34, 211, 238, 0.5);
+    }
+    &[data-prio="3"]::after {
+        background: #f59e0b;
+        box-shadow: 0 0 6px rgba(245, 158, 11, 0.5);
+    }
+    &[data-prio="4"]::after {
+        background: #f97316;
+        box-shadow: 0 0 6px rgba(249, 115, 22, 0.5);
+    }
+    &[data-prio="5"]::after {
+        background: #ef4444;
+        box-shadow: 0 0 8px rgba(239, 68, 68, 0.7);
+    }
+}

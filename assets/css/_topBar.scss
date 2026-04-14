@@ -1,0 +1,143 @@
+@use "variables" as *;
+
+
+// ============================================================
+//  Main Child : TOPBAR (header)
+// ============================================================
+.topbar {
+    position: sticky;
+    top: 0;
+    height: $header-height;
+    background: rgba($surface-0, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid $border-subtle;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    z-index: 50;
+    gap: 16px;
+
+    &__left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    &__breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+
+        &-sep {
+            color: $text-muted;
+        }
+        &-current {
+            font-weight: 500;
+            color: $text-primary;
+            font-family: $font-display;
+        }
+        &-parent {
+            color: $text-muted;
+        }
+    }
+
+    &__right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    &__search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid $border-subtle;
+        border-radius: $border-radius-md;
+        padding: 6px 12px;
+        width: 220px;
+        transition: all $transition-fast;
+
+        &:focus-within {
+            border-color: rgba($blue, 0.4);
+            background: $blue-dim;
+            box-shadow: 0 0 0 3px rgba($blue, 0.08);
+        }
+
+        input {
+            background: none;
+            border: none;
+            outline: none;
+            color: $text-primary;
+            font-size: 13px;
+            flex: 1;
+            &::placeholder {
+                color: $text-muted;
+            }
+        }
+
+        &-icon {
+            color: $text-muted;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+    }
+
+    &__action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid $border-subtle;
+        border-radius: $border-radius-md;
+        cursor: pointer;
+        color: $text-secondary;
+        transition: all $transition-fast;
+        font-size: 15px;
+        position: relative;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: $text-primary;
+            border-color: $border-default;
+        }
+
+        &.has-notif::after {
+            content: "";
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 6px;
+            height: 6px;
+            background: $blue;
+            border-radius: 50%;
+            border: 1.5px solid $surface-0;
+            box-shadow: 0 0 6px $blue;
+        }
+    }
+
+    &__logout {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        background: transparent;
+        border: 1px solid $border-subtle;
+        border-radius: $border-radius-md;
+        color: $text-muted;
+        cursor: pointer;
+        font-size: 13px;
+        transition: all $transition-fast;
+
+        &:hover {
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.06);
+        }
+    }
+}

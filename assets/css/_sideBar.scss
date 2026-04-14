@@ -1,0 +1,189 @@
+@use "variables" as *;
+
+
+// ============================================================
+//  Main Child : SIDEBAR
+// ============================================================
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: $sidebar-width;
+    height: 100vh;
+    background: rgba($surface-1, 0.85);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border-right: 1px solid $border-subtle;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    transition: transform $transition-slow;
+
+    &__logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 20px 20px 16px;
+        border-bottom: 1px solid $border-subtle;
+
+        &-icon {
+            width: 34px;
+            height: 34px;
+            background: linear-gradient(135deg, $blue, $violet);
+            border-radius: $border-radius-md;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: $shadow-blue;
+            flex-shrink: 0;
+        }
+
+        &-text {
+            font-family: $font-display;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: $text-primary;
+
+            span {
+                color: $blue;
+            }
+        }
+    }
+
+    &__nav {
+        flex: 1;
+        padding: 12px 10px;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            width: 3px;
+        }
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: $border-default;
+            border-radius: 3px;
+        }
+    }
+
+    &__section-label {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: $text-muted;
+        padding: 12px 10px 6px;
+        display: block;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 9px 10px;
+        border-radius: $border-radius-md;
+        color: $text-secondary;
+        cursor: pointer;
+        transition: all $transition-fast;
+        position: relative;
+        font-size: 13.5px;
+        font-weight: 400;
+        white-space: nowrap;
+
+        &:hover {
+            color: $text-primary;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        &.active {
+            color: $blue;
+            background: $blue-dim;
+            font-weight: 500;
+
+            &::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 3px;
+                height: 18px;
+                background: $blue;
+                border-radius: 0 3px 3px 0;
+                box-shadow: 0 0 10px $blue;
+            }
+        }
+
+        &__icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            opacity: 0.8;
+        }
+
+        &__badge {
+            margin-left: auto;
+            background: $blue-glow;
+            color: $blue;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 1px 6px;
+            border-radius: 20px;
+            border: 1px solid rgba($blue, 0.2);
+        }
+    }
+
+    &__footer {
+        padding: 12px 10px;
+        border-top: 1px solid $border-subtle;
+    }
+
+    &__user {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 9px 10px;
+        border-radius: $border-radius-md;
+        cursor: pointer;
+        transition: background $transition-fast;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        &-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, $violet, $blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        &-info {
+            flex: 1;
+            min-width: 0;
+
+            &-name {
+                font-size: 13px;
+                font-weight: 500;
+                color: $text-primary;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            &-role {
+                font-size: 11px;
+                color: $text-muted;
+            }
+        }
+    }
+}

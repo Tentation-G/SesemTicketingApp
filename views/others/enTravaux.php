@@ -1,11 +1,11 @@
 <?php ob_start(); ?>
 
 <div class="center_wrapper_content">
-    <h1>Erreur 404</h1>
+    <h1>Chantier</h1>
 </div>
 
 <?php
 $content = ob_get_clean();
-$title = "404";
+$title = "Chantier";
 require('views/layout/baseLayout.php');
 ?>

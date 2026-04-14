@@ -1,6 +1,5 @@
 <?php ob_start();
 
-// Helpers pour conserver les paramètres GET dans les liens de tri / pagination
 function buildUrl(array $overrides = []): string
 {
     $params = array_merge($_GET, $overrides);
@@ -9,322 +8,243 @@ function buildUrl(array $overrides = []): string
 
 function sortLink(string $col, string $label, string $currentSort, string $currentDir): string
 {
-    $newDir = ($currentSort === $col && $currentDir === 'ASC') ? 'DESC' : 'ASC';
-    $arrow  = '';
-    if ($currentSort === $col) {
-        $arrow = $currentDir === 'ASC' ? ' ▲' : ' ▼';
+    $isActive = $currentSort === $col;
+    $newDir   = ($isActive && $currentDir === 'ASC') ? 'DESC' : 'ASC';
+    $arrow    = '';
+    if ($isActive) {
+        $arrow = '<span class="sort-icon">' . ($currentDir === 'ASC' ? '▲' : '▼') . '</span>';
     }
-    $url = htmlspecialchars(buildUrl(['sort' => $col, 'dir' => $newDir, 'page' => 1]));
-    return "<a href=\"$url\" class=\"sort-link\">$label<span class=\"sort-arrow\">$arrow</span></a>";
+    $url       = htmlspecialchars(buildUrl(['sort' => $col, 'dir' => $newDir, 'page' => 1]));
+    $activeClass = $isActive ? ' active' : '';
+    return "<a href=\"$url\" class=\"sort-link$activeClass\">$label$arrow</a>";
+}
+
+// Mapping statuts → classe CSS + libellé
+function statutClass(int $id): string
+{
+    return match($id) {
+        1 => 'open',
+        2 => 'ongoing',
+        3 => 'waiting',
+        4 => 'resolved',
+        5 => 'closed',
+        default => 'open'
+    };
+}
+
+// Initiales d'un nom complet
+function initiales(string $fullName): string
+{
+    $parts = array_filter(explode(' ', $fullName));
+    if (count($parts) >= 2) {
+        return strtoupper(mb_substr($parts[0], 0, 1) . mb_substr(end($parts), 0, 1));
+    }
+    return strtoupper(mb_substr($fullName, 0, 2));
 }
 ?>
 
-<style>
-    .tickets-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.2rem;
-    }
-    .btn-primary {
-        background: #1976D2;
-        color: #fff;
-        padding: .5rem 1.1rem;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: .9rem;
-    }
-    .btn-primary:hover { background: #1565C0; }
-
-    /* Filtres */
-    .filters {
-        display: flex;
-        flex-wrap: wrap;
-        gap: .6rem;
-        margin-bottom: 1.2rem;
-        background: #f5f5f5;
-        padding: .8rem 1rem;
-        border-radius: 8px;
-    }
-    .filters input,
-    .filters select {
-        padding: .4rem .7rem;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: .88rem;
-    }
-    .filters input { min-width: 180px; }
-    .btn-filter {
-        background: #1976D2;
-        color: #fff;
-        border: none;
-        padding: .4rem .9rem;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: .88rem;
-    }
-    .btn-reset {
-        background: #e0e0e0;
-        color: #333;
-        border: none;
-        padding: .4rem .9rem;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: .88rem;
-        text-decoration: none;
-    }
-
-    /* Tableau */
-    .table-wrapper { overflow-x: auto; }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: .9rem;
-        background: #fff;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 1px 4px rgba(0,0,0,.08);
-    }
-    th {
-        background: #1976D2;
-        color: #fff;
-        padding: .7rem 1rem;
-        text-align: left;
-        white-space: nowrap;
-    }
-    td {
-        padding: .65rem 1rem;
-        border-bottom: 1px solid #eee;
-        vertical-align: middle;
-    }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #f0f7ff; }
-
-    .sort-link { color: #fff; text-decoration: none; }
-    .sort-link:hover { text-decoration: underline; }
-    .sort-arrow { margin-left: 4px; font-size: .75rem; }
-
-    /* Badges */
-    .badge {
-        display: inline-block;
-        padding: .25rem .65rem;
-        border-radius: 20px;
-        font-size: .78rem;
-        font-weight: 600;
-        color: #fff;
-        white-space: nowrap;
-    }
-
-    /* Badges priorité */
-    .prio-1 { background: #78909C; }
-    .prio-2 { background: #4DB6AC; }
-    .prio-3 { background: #FFA726; }
-    .prio-4 { background: #EF5350; }
-    .prio-5 { background: #B71C1C; }
-
-    /* Lien détail */
-    .btn-detail {
-        background: #e3f2fd;
-        color: #1565C0;
-        border: 1px solid #90CAF9;
-        padding: .3rem .7rem;
-        border-radius: 5px;
-        font-size: .82rem;
-        text-decoration: none;
-        white-space: nowrap;
-    }
-    .btn-detail:hover { background: #bbdefb; }
-
-    /* Pagination */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: .4rem;
-        margin-top: 1.2rem;
-        flex-wrap: wrap;
-    }
-    .pagination a, .pagination span {
-        padding: .35rem .75rem;
-        border-radius: 5px;
-        font-size: .88rem;
-        border: 1px solid #ccc;
-        text-decoration: none;
-        color: #1976D2;
-        background: #fff;
-    }
-    .pagination span.current {
-        background: #1976D2;
-        color: #fff;
-        border-color: #1976D2;
-        font-weight: 700;
-    }
-    .pagination a:hover { background: #e3f2fd; }
-    .pagination span.disabled { color: #bbb; pointer-events: none; }
-
-    .total-info {
-        text-align: right;
-        font-size: .83rem;
-        color: #666;
-        margin-bottom: .5rem;
-    }
-    .empty-state {
-        text-align: center;
-        padding: 2rem;
-        color: #888;
-        font-style: italic;
-    }
-</style>
-
-<div class="tickets-header">
-    <h1>Tickets</h1>
-    <a href="index.php?p=addTicketView" class="btn-primary">+ Nouveau ticket</a>
+<!-- ══ EN-TÊTE DE PAGE ═════════════════════════════════════════ -->
+<div class="page-header">
+    <div>
+        <h1 class="page-header__title">
+            Mes <span>tickets</span>
+        </h1>
+        <p class="page-header__sub">
+            <?= $total ?> ticket<?= $total > 1 ? 's' : '' ?> trouvé<?= $total > 1 ? 's' : '' ?>
+            · page <?= $page ?> / <?= max(1, $totalPages) ?>
+        </p>
+    </div>
+    <a href="index.php?p=addTicketView" class="btn btn--primary">
+        <svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 4v12M4 10h12"/>
+        </svg>
+        Nouveau ticket
+    </a>
 </div>
 
-<!-- Filtres -->
-<form method="GET" action="index.php" class="filters">
+<!-- ══ FILTRES ═════════════════════════════════════════════════ -->
+<form method="GET" action="index.php" class="tickets-filters">
     <input type="hidden" name="p"    value="listTicketsView">
     <input type="hidden" name="sort" value="<?= htmlspecialchars($filters['sort']) ?>">
     <input type="hidden" name="dir"  value="<?= htmlspecialchars($filters['dir'])  ?>">
 
-    <input
-        type="text"
-        name="search"
-        placeholder="Rechercher (client, n° ticket…)"
-        value="<?= htmlspecialchars($filters['search']) ?>"
-    >
+    <label class="filter-input">
+        <svg class="filter-icon" width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="9" cy="9" r="6"/><path d="M15 15l3 3"/>
+        </svg>
+        <input
+            type="text"
+            name="search"
+            placeholder="Rechercher (client, n° ticket…)"
+            value="<?= htmlspecialchars($filters['search']) ?>"
+        >
+    </label>
 
-    <select name="statut">
-        <option value="">Tous les statuts</option>
-        <?php foreach ($statutOptions as $id => $s) : ?>
-            <option value="<?= $id ?>" <?= ((string)$filters['statut'] === (string)$id) ? 'selected' : '' ?>>
-                <?= htmlspecialchars($s['label']) ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
+    <label class="filter-input">
+        <svg class="filter-icon" width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="10" cy="10" r="7"/><path d="M10 7v3l2 2"/>
+        </svg>
+        <select name="statut">
+            <option value="">Tous les statuts</option>
+            <?php foreach ($statutOptions as $id => $s) : ?>
+                <option value="<?= $id ?>" <?= ((string)$filters['statut'] === (string)$id) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($s['label']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </label>
 
-    <select name="type">
-        <option value="">Tous les types</option>
-        <?php foreach ($typeOptions as $t) : ?>
-            <option value="<?= htmlspecialchars($t) ?>" <?= ($filters['type'] === $t) ? 'selected' : '' ?>>
-                <?= htmlspecialchars($t) ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
+    <label class="filter-input">
+        <svg class="filter-icon" width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 7h6M7 10h4"/>
+        </svg>
+        <select name="type">
+            <option value="">Tous les types</option>
+            <?php foreach ($typeOptions as $t) : ?>
+                <option value="<?= htmlspecialchars($t) ?>" <?= ($filters['type'] === $t) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($t) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </label>
 
-    <select name="priorite">
-        <option value="">Toutes les priorités</option>
-        <?php foreach ($prioriteOptions as $id => $label) : ?>
-            <option value="<?= $id ?>" <?= ((string)$filters['priorite'] === (string)$id) ? 'selected' : '' ?>>
-                <?= htmlspecialchars($label) ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
+    <label class="filter-input">
+        <svg class="filter-icon" width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 6h14M6 10h8M9 14h2"/>
+        </svg>
+        <select name="priorite">
+            <option value="">Toutes les priorités</option>
+            <?php foreach ($prioriteOptions as $id => $label) : ?>
+                <option value="<?= $id ?>" <?= ((string)$filters['priorite'] === (string)$id) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($label) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </label>
 
-    <button type="submit" class="btn-filter">Filtrer</button>
-    <a href="index.php?p=listTicketsView" class="btn-reset">Réinitialiser</a>
+    <button type="submit" class="btn btn--primary btn--sm">Filtrer</button>
+    <a href="index.php?p=listTicketsView" class="btn btn--ghost btn--sm">Réinitialiser</a>
 </form>
 
-<!-- Total -->
-<p class="total-info">
-    <?= $total ?> ticket<?= $total > 1 ? 's' : '' ?> trouvé<?= $total > 1 ? 's' : '' ?>
-</p>
+<!-- ══ TABLEAU ═════════════════════════════════════════════════ -->
+<div class="card" style="overflow:visible">
+    <div class="table-wrapper">
+        <table class="tickets-table">
+            <thead>
+                <tr>
+                    <th><?= sortLink('IDTicket',  '#',          $filters['sort'], $filters['dir']) ?></th>
+                    <th><?= sortLink('Type',      'Type',       $filters['sort'], $filters['dir']) ?></th>
+                    <th><?= sortLink('Priorite',  'Priorité',   $filters['sort'], $filters['dir']) ?></th>
+                    <th><?= sortLink('Statut',    'Statut',     $filters['sort'], $filters['dir']) ?></th>
+                    <th><?= sortLink('NomClient', 'Client',     $filters['sort'], $filters['dir']) ?></th>
+                    <th><?= sortLink('DateInsert','Date',       $filters['sort'], $filters['dir']) ?></th>
+                    <th>Technicien</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php if (empty($tickets)) : ?>
+                <tr>
+                    <td colspan="8">
+                        <div class="empty-state">
+                            <div class="empty-state__icon">🎫</div>
+                            <div class="empty-state__title">Aucun ticket trouvé</div>
+                            <div class="empty-state__sub">Essaie d'ajuster les filtres ou crée un nouveau ticket.</div>
+                        </div>
+                    </td>
+                </tr>
+            <?php else : ?>
+                <?php foreach ($tickets as $t) :
+                    $statutCls = statutClass((int) $t['Statut']);
+                    $statutLbl = $statutOptions[$t['Statut']]['label'] ?? '?';
+                    $prioCls   = 'prio-' . min(5, max(1, (int) $t['Priorite']));
+                    $prioLbl   = $prioriteOptions[$t['Priorite']] ?? '?';
+                    $date      = $t['DateInsert']
+                                    ? (new DateTime($t['DateInsert']))->format('d/m/Y H:i')
+                                    : '—';
+                    $tech      = $t['technicien'] ?? '—';
+                    $init      = $tech !== '—' ? initiales($tech) : '?';
+                    $detailUrl = htmlspecialchars(buildUrl(['p' => 'ticketDetailView', 'id' => $t['IDTicket']]));
+                ?>
+                <tr onclick="window.location='<?= $detailUrl ?>'">
+                    <td><span class="col-id">#<?= (int) $t['IDTicket'] ?></span></td>
+                    <td><?= htmlspecialchars($t['Type']) ?></td>
+                    <td><span class="badge badge--<?= $prioCls ?>"><?= htmlspecialchars($prioLbl) ?></span></td>
+                    <td><span class="badge badge--<?= $statutCls ?>"><?= htmlspecialchars($statutLbl) ?></span></td>
+                    <td><span class="col-client"><?= htmlspecialchars($t['NomClient']) ?></span></td>
+                    <td><span class="col-date"><?= $date ?></span></td>
+                    <td>
+                        <div class="col-tech">
+                            <div class="col-tech-avatar"><?= $init ?></div>
+                            <?= htmlspecialchars($tech) ?>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="<?= $detailUrl ?>" class="btn btn--ghost btn--sm row-action"
+                            onclick="event.stopPropagation()">
+                            Voir →
+                        </a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
 
-<!-- Tableau -->
-<div class="table-wrapper">
-    <table>
-        <thead>
-            <tr>
-                <th><?= sortLink('IDTicket',  '#',           $filters['sort'], $filters['dir']) ?></th>
-                <th><?= sortLink('Type',      'Type',        $filters['sort'], $filters['dir']) ?></th>
-                <th><?= sortLink('Priorite',  'Priorité',    $filters['sort'], $filters['dir']) ?></th>
-                <th><?= sortLink('Statut',    'Statut',      $filters['sort'], $filters['dir']) ?></th>
-                <th><?= sortLink('NomClient', 'Client',      $filters['sort'], $filters['dir']) ?></th>
-                <th><?= sortLink('DateInsert','Date',        $filters['sort'], $filters['dir']) ?></th>
-                <th>Technicien</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php if (empty($tickets)) : ?>
-            <tr>
-                <td colspan="8" class="empty-state">Aucun ticket trouvé.</td>
-            </tr>
-        <?php else : ?>
-            <?php foreach ($tickets as $t) :
-                $statut   = $statutOptions[$t['Statut']]   ?? ['label' => '?', 'color' => '#999'];
-                $prioClass = 'prio-' . min(5, max(1, (int) $t['Priorite']));
-                $prioLabel = $prioriteOptions[$t['Priorite']] ?? '?';
-                $date      = $t['DateInsert']
-                                ? (new DateTime($t['DateInsert']))->format('d/m/Y H:i')
-                                : '—';
+    <!-- ══ PAGINATION ══════════════════════════════════════════ -->
+    <?php if ($totalPages > 1) : ?>
+    <div class="pagination">
+        <span class="pagination__info">
+            <?= (($page - 1) * 20) + 1 ?>–<?= min($page * 20, $total) ?> sur <?= $total ?> tickets
+        </span>
+
+        <div class="pagination__pages">
+            <!-- Précédent -->
+            <?php if ($page > 1) : ?>
+                <a href="<?= htmlspecialchars(buildUrl(['page' => $page - 1])) ?>"
+                    class="pagination__btn pagination__btn--prev">
+                    ← Préc.
+                </a>
+            <?php else : ?>
+                <span class="pagination__btn pagination__btn--prev disabled">← Préc.</span>
+            <?php endif; ?>
+
+            <!-- Pages numérotées -->
+            <?php
+            $range = 2;
+            for ($i = 1; $i <= $totalPages; $i++) :
+                if ($i === 1 || $i === $totalPages || abs($i - $page) <= $range) :
             ?>
-            <tr>
-                <td><strong>#<?= (int) $t['IDTicket'] ?></strong></td>
-                <td><?= htmlspecialchars($t['Type']) ?></td>
-                <td>
-                    <span class="badge <?= $prioClass ?>">
-                        <?= htmlspecialchars($prioLabel) ?>
-                    </span>
-                </td>
-                <td>
-                    <span class="badge" style="background:<?= htmlspecialchars($statut['color']) ?>">
-                        <?= htmlspecialchars($statut['label']) ?>
-                    </span>
-                </td>
-                <td><?= htmlspecialchars($t['NomClient']) ?></td>
-                <td><?= $date ?></td>
-                <td><?= htmlspecialchars($t['technicien'] ?? '—') ?></td>
-                <td>
-                    <a href="<?= htmlspecialchars(buildUrl(['p' => 'ticketDetailView', 'id' => $t['IDTicket']])) ?>"
-                        class="btn-detail">
-                        Voir →
-                    </a>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        <?php endif; ?>
-        </tbody>
-    </table>
+                <?php if ($i === $page) : ?>
+                    <span class="pagination__btn current"><?= $i ?></span>
+                <?php else : ?>
+                    <a href="<?= htmlspecialchars(buildUrl(['page' => $i])) ?>"
+                        class="pagination__btn"><?= $i ?></a>
+                <?php endif; ?>
+            <?php
+                elseif (abs($i - $page) === $range + 1) :
+                    echo '<span class="pagination__btn disabled">…</span>';
+                endif;
+            endfor;
+            ?>
+
+            <!-- Suivant -->
+            <?php if ($page < $totalPages) : ?>
+                <a href="<?= htmlspecialchars(buildUrl(['page' => $page + 1])) ?>"
+                    class="pagination__btn pagination__btn--next">
+                    Suiv. →
+                </a>
+            <?php else : ?>
+                <span class="pagination__btn pagination__btn--next disabled">Suiv. →</span>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endif; ?>
 </div>
-
-<!-- Pagination -->
-<?php if ($totalPages > 1) : ?>
-<nav class="pagination">
-    <?php if ($page > 1) : ?>
-        <a href="<?= htmlspecialchars(buildUrl(['page' => $page - 1])) ?>">‹ Précédent</a>
-    <?php else : ?>
-        <span class="disabled">‹ Précédent</span>
-    <?php endif; ?>
-
-    <?php
-    $range = 2;
-    for ($i = 1; $i <= $totalPages; $i++) :
-        if ($i === 1 || $i === $totalPages || abs($i - $page) <= $range) :
-    ?>
-        <?php if ($i === $page) : ?>
-            <span class="current"><?= $i ?></span>
-        <?php else : ?>
-            <a href="<?= htmlspecialchars(buildUrl(['page' => $i])) ?>"><?= $i ?></a>
-        <?php endif; ?>
-    <?php
-        elseif (abs($i - $page) === $range + 1) :
-            echo '<span class="disabled">…</span>';
-        endif;
-    endfor;
-    ?>
-
-    <?php if ($page < $totalPages) : ?>
-        <a href="<?= htmlspecialchars(buildUrl(['page' => $page + 1])) ?>">Suivant ›</a>
-    <?php else : ?>
-        <span class="disabled">Suivant ›</span>
-    <?php endif; ?>
-</nav>
-<?php endif; ?>
 
 <?php
 $content = ob_get_clean();
-$title   = "Tickets";
+$title   = 'Tickets';
 require('views/layout/baseLayout.php');
 ?>

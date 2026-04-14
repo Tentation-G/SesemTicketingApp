@@ -1,0 +1,89 @@
+@use "variables" as *;
+
+
+// ============================================================
+//  Main Child : BACKGROUND ANIMÉ DE L'ANIMATION
+// ============================================================
+.bg-scene {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+
+    &__blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(55px);
+        opacity: 1;
+
+        &--1 {
+            width: 500px;
+            height: 500px;
+            top: -160px;
+            left: -80px;
+            background: rgba(79, 142, 247, 0.38);
+            animation: blob-drift-1 20s ease-in-out infinite;
+        }
+        &--2 {
+            width: 440px;
+            height: 440px;
+            bottom: -120px;
+            right: -80px;
+            background: rgba(139, 92, 246, 0.32);
+            animation: blob-drift-2 25s ease-in-out infinite;
+        }
+        &--3 {
+            width: 300px;
+            height: 300px;
+            top: 38%;
+            left: 44%;
+            background: rgba(34, 211, 238, 0.18);
+            animation: blob-drift-3 18s ease-in-out infinite;
+        }
+    }
+
+    // Grille de points subtile (ca donne du cachet)
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 38px 38px;
+        mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 40%, transparent);
+    }
+}
+
+@keyframes blob-drift-1 {
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(60px, 40px) scale(1.4);
+    }
+    66% {
+        transform: translate(-30px, 70px) scale(0.95);
+    }
+}
+@keyframes blob-drift-2 {
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+    40% {
+        transform: translate(-50px, -60px) scale(1.08);
+    }
+    70% {
+        transform: translate(40px, 30px) scale(0.92);
+    }
+}
+@keyframes blob-drift-3 {
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(-40px, 50px) scale(1.15);
+    }
+}
