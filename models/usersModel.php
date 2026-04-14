@@ -58,7 +58,7 @@ function createUser(string $login, string $password, string $nom, string $prenom
     return $stmt->execute([
         ':login' => $login,
         ':pass' => password_hash($password, PASSWORD_DEFAULT),
-        ':role' => 2,
+        ':role' => 3,
         ':nom' => $nom,
         ':prenom' => $prenom,
         ':email' => $email

@@ -2,7 +2,7 @@
 
 require ('core/config.php');
 require ('core/function.php');
-require ('core/debug.php');
+//require ('core/debug.php');
 
 require('controllers/othersController.php');
 require('controllers/userController.php');
@@ -40,9 +40,12 @@ if(isset($_GET['p'])){
         case 'addTicketView':
                 addTicketView();
             break;
-
         case 'addTicket':
                 addTicket();
+            break;
+        
+        case 'listTicketsView':
+                listTicketsView();
             break;
 
         case 'home':
