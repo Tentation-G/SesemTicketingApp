@@ -1,5 +1,9 @@
 <?php
 
 function page404() {
-    require('views/others/page404.php');
+    require_once('views/others/page404.php');
+}
+
+function enConstruction() {
+    require_once('views/others/enConstruction.php');
 }

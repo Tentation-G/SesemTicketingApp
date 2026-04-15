@@ -8,5 +8,5 @@
 <?php
 $content = ob_get_clean();
 $title = "Accueil";
-require('views/layout/baseLayout.php');
+require_once('views/layout/baseLayout.php');
 ?>

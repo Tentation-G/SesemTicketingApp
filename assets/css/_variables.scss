@@ -1,8 +1,8 @@
-// ============================================================
-//  Variables
-// ============================================================
+// ╔══════════════════════════════════════════════════════════╗
+//   VARIABLES
+// ╚══════════════════════════════════════════════════════════╝
 
-// --- Palette de base ---
+// Palette de base
 $black:          #07080d;
 $surface-0:      #0d0f18;      // fond page
 $surface-1:      #12151f;     // fond sidebar
@@ -14,7 +14,7 @@ $border-subtle:  rgba(255, 255, 255, 0.07);
 $border-default: rgba(255, 255, 255, 0.12);
 $border-strong:  rgba(255, 255, 255, 0.22);
 
-// --- Accents ---
+// Accents
 $blue:           #4f8ef7;
 $blue-glow:      rgba(79, 142, 247, 0.18);
 $blue-dim:       rgba(79, 142, 247, 0.08);
@@ -23,32 +23,32 @@ $violet-glow:    rgba(139, 92, 246, 0.15);
 $cyan:           #22d3ee;
 $cyan-dim:       rgba(34, 211, 238, 0.1);
 
-// --- Statuts ---
+// Statuts
 $status-open:     #4f8ef7;       // Ouvert
 $status-ongoing:  #f59e0b;      // En cours
 $status-waiting:  #8b5cf6;     // En attente
 $status-resolved: #10b981;    // Résolu
 $status-closed:   #6b7280;   // Clôturé
 
-// --- Priorités ---
+// Priorités
 $prio-1: #6b7280;       // Très basse
 $prio-2: #22d3ee;      // Basse
 $prio-3: #f59e0b;     // Moyenne
 $prio-4: #f97316;    // Haute
 $prio-5: #ef4444;   // Urgente
 
-// --- Texte ---
+// Texte
 $text-primary:   #e8eaf0;
 $text-secondary: #8b909e;
 $text-muted:     #555b6e;
 $text-inverse:   #07080d;
 
-// --- Typographie ---
+// Typographie
 $font-display: 'Syne', sans-serif;
 $font-body:    'DM Sans', sans-serif;
 $font-mono:    'JetBrains Mono', monospace;
 
-// --- Espacements ---
+// Espacements
 $sidebar-width:     240px;
 $header-height:     60px;
 $border-radius-sm:  6px;
@@ -56,12 +56,12 @@ $border-radius-md:  10px;
 $border-radius-lg:  16px;
 $border-radius-xl:  24px;
 
-// --- Transitions ---
+// Transitions
 $transition-fast:   0.15s ease;
 $transition-base:   0.25s ease;
 $transition-slow:   0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
-// --- Ombres ---
+// Ombres
 $shadow-sm:  0 1px 3px rgba(0,0,0,0.4);
 $shadow-md:  0 4px 16px rgba(0,0,0,0.5);
 $shadow-lg:  0 8px 32px rgba(0,0,0,0.6);

@@ -618,12 +618,111 @@ select.form-control[name=idFamille].filtering {
   background: rgba(239, 68, 68, 0.06);
 }
 
+.login-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.login-logo__icon {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #4f8ef7, #8b5cf6);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 0 24px rgba(79, 142, 247, 0.25);
+}
+.login-logo__text {
+  font-family: "Syne", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #e8eaf0;
+}
+.login-logo__text span {
+  color: #4f8ef7;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: rgba(24, 27, 40, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 36px 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 60px rgba(79, 142, 247, 0.06);
+  animation: login-appear 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.login-card__title {
+  font-family: "Syne", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #e8eaf0;
+  margin-bottom: 4px;
+}
+.login-card__sub {
+  font-size: 13px;
+  color: #555b6e;
+  margin-bottom: 24px;
+}
+.login-card__submit {
+  width: 100%;
+  justify-content: center;
+  margin-top: 22px;
+  padding: 11px;
+  font-size: 14px;
+}
+.login-card__footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 12.5px;
+  color: #555b6e;
+}
+.login-card__footer a {
+  color: #4f8ef7;
+  font-weight: 500;
+  margin-left: 4px;
+  transition: color 0.15s ease;
+}
+.login-card__footer a:hover {
+  color: rgb(127.7826086957, 173.3206521739, 249.2173913043);
+}
+
+@keyframes login-appear {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .center_wrapper_content {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
   width: 100%;
+}
+
+.contour_img {
+  filter: drop-shadow(0 0 5px #4f8ef7);
 }
 
 *,
@@ -1184,84 +1283,6 @@ textarea {
   gap: 4px;
   font-size: 12px;
   padding: 0 12px;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-@media (max-width: 760px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-}
-.form-grid--full {
-  grid-column: 1/-1;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.form-group label {
-  font-size: 12px;
-  font-weight: 500;
-  color: #8b909e;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-.form-group label .required {
-  color: #4f8ef7;
-  margin-left: 2px;
-}
-
-.form-control {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 10px;
-  color: #e8eaf0;
-  font-size: 13.5px;
-  padding: 10px 14px;
-  transition: all 0.15s ease;
-  width: 100%;
-  outline: none;
-  -moz-appearance: none;
-       appearance: none;
-  -webkit-appearance: none;
-}
-.form-control::-moz-placeholder {
-  color: #555b6e;
-}
-.form-control::placeholder {
-  color: #555b6e;
-}
-.form-control:hover {
-  border-color: rgba(255, 255, 255, 0.12);
-}
-.form-control:focus {
-  border-color: rgba(79, 142, 247, 0.5);
-  background: rgba(79, 142, 247, 0.08);
-  box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.08);
-}
-.form-control option {
-  background: #181b28;
-  color: #e8eaf0;
-}
-
-select.form-control {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23555b6e' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 34px;
-  cursor: pointer;
-}
-
-textarea.form-control {
-  resize: vertical;
-  min-height: 90px;
-  line-height: 1.6;
 }
 
 .alert {

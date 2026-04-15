@@ -1,10 +1,10 @@
 @use "variables" as *;
 
-// ============================================================
-//  SesemIT — Page : Nouveau ticket
-// ============================================================
+// ╔══════════════════════════════════════════════════════════╗
+//  PAGE Nouveau ticket
+// ╚══════════════════════════════════════════════════════════╝
 
-// ── En-tête de section ──────────────────────────────────────
+// En-tête de section
 .form-section {
     margin-bottom: 10px;
 
@@ -34,7 +34,7 @@
     }
 }
 
-// ── Grille de champs ────────────────────────────────────────
+// Grille de champs
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -60,7 +60,7 @@
     grid-column: 1 / -1;
 }
 
-// ── Groupe de champ ─────────────────────────────────────────
+// Groupe de champ
 .form-group {
     display: flex;
     flex-direction: column;
@@ -94,7 +94,7 @@
     }
 }
 
-// ── Inputs / Select / Textarea ───────────────────────────────
+// Inputs / Select / Textarea
 .form-control {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid $border-subtle;
@@ -170,7 +170,7 @@ textarea.form-control {
     line-height: 1.65;
 }
 
-// ── Message d'erreur sous un champ ───────────────────────────
+// Message d'erreur sous un champ
 .field-error {
     font-size: 11.5px;
     color: #f87171;
@@ -195,7 +195,7 @@ textarea.form-control {
     }
 }
 
-// ── Carte de formulaire ──────────────────────────────────────
+// Carte de formulaire
 .form-card {
     background: rgba($surface-2, 0.65);
     backdrop-filter: blur(14px);
@@ -211,7 +211,7 @@ textarea.form-control {
     }
 }
 
-// ── Barre d'actions en bas ───────────────────────────────────
+// Barre d'actions en bas
 .form-actions {
     display: flex;
     align-items: center;
@@ -230,7 +230,7 @@ textarea.form-control {
     }
 }
 
-// ── Filtre familles par marque (JS) ──────────────────────────
+// Filtre familles par marque (JS)
 // Transition douce quand les options apparaissent / disparaissent
 select.form-control[name="idFamille"] {
     transition:
@@ -245,7 +245,7 @@ select.form-control[name="idFamille"] {
     }
 }
 
-// ── Indicateur de priorité visuel ───────────────────────────
+// Indicateur de priorité visuel
 // Colore le select en fonction de la priorité choisie (via JS)
 .prio-indicator {
     position: relative;

@@ -1,0 +1,51 @@
+@use "variable" as *;
+
+// ╔══════════════════════════════════════════════════════════╗
+//  AJOUTS PAGE DÉTAIL TICKET
+// ╚══════════════════════════════════════════════════════════╝
+
+.comments-scroll {
+    max-height: 20vh;
+    overflow-y: auto;
+    padding-right: 4px;
+    margin-bottom: 16px;
+
+    // Scrollbar discrète
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $border-default;
+        border-radius: 4px;
+
+        &:hover {
+            background: $border-strong;
+        }
+    }
+}
+
+// Conteneur du fil avec fondu bas
+#commentaires {
+    position: relative;
+}
+
+// Grille détail responsive — passe en colonne sur petit écran
+.detail-grid {
+
+    // Sur mobile, les deux colonnes de la ligne 1 et 2
+    // passent en une seule colonne
+    @media (max-width: 700px) {
+        grid-template-columns: 1fr;
+
+        // Les sous-grilles client/localisation et matériel/infos
+        // passent aussi en colonne
+        div[style*="grid-template-columns:1fr 1fr"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+}

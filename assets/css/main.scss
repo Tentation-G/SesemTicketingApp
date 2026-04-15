@@ -1,13 +1,16 @@
 @use "variables" as *;
 @use "addTickets";
 
-// ============================================================
-//  SesemIT — Main Stylesheet
-// ============================================================
+// ╔══════════════════════════════════════════════════════════╗
+//   MAIN STYLESHEET
+// ╚══════════════════════════════════════════════════════════╝
 
-@use "_bgBlob";
-@use "_sideBar";
-@use "_topBar";
+@use "bgBlob";
+
+@use "sideBar";
+@use "topBar";
+
+@use "login";
 
 
 // ---- Google Fonts ----
@@ -16,6 +19,7 @@
 // ---- Utils ----
 .center_wrapper_content {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 
@@ -23,9 +27,11 @@
     width: 100%;
 }
 
-// ============================================================
-//  RESET & BASE
-// ============================================================
+.contour_img {
+    filter: drop-shadow(0 0 5px $blue);
+}
+
+// Reset et Base
 *,
 *::before,
 *::after {
@@ -65,9 +71,7 @@ textarea {
 
 
 
-// ============================================================
-//  LAYOUT
-// ============================================================
+// Layout
 .app-shell {
     position: relative;
     z-index: 1;
@@ -75,9 +79,7 @@ textarea {
     min-height: 100vh;
 }
 
-// ============================================================
-//  MAIN CONTENT
-// ============================================================
+// Main Content
 .main-content {
     margin-left: $sidebar-width;
     flex: 1;
@@ -86,9 +88,7 @@ textarea {
     min-height: 100vh;
 }
 
-// ============================================================
-//  PAGE CONTENT
-// ============================================================
+// Page Content
 .page {
     flex: 1;
     padding: 28px 28px 48px;
@@ -122,9 +122,7 @@ textarea {
     }
 }
 
-// ============================================================
-//  BOUTONS
-// ============================================================
+// Button
 .btn {
     display: inline-flex;
     align-items: center;
@@ -192,9 +190,7 @@ textarea {
     }
 }
 
-// ============================================================
-//  CARTES / PANELS
-// ============================================================
+// Card et panel
 .card {
     background: rgba($surface-2, 0.7);
     backdrop-filter: blur(12px);
@@ -233,9 +229,7 @@ textarea {
     }
 }
 
-// ============================================================
-//  STAT CARDS (KPIs)
-// ============================================================
+// Stat card (?)
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -333,9 +327,7 @@ textarea {
     }
 }
 
-// ============================================================
-//  BADGES (statut & priorité)
-// ============================================================
+// Status et priorités
 .badge {
     display: inline-flex;
     align-items: center;
@@ -411,9 +403,7 @@ textarea {
     }
 }
 
-// ============================================================
-//  TABLEAU DE TICKETS
-// ============================================================
+// Tab de tickets
 .tickets-filters {
     display: flex;
     flex-wrap: wrap;
@@ -605,9 +595,7 @@ textarea {
     }
 }
 
-// ============================================================
-//  PAGINATION
-// ============================================================
+// Pagination
 .pagination {
     display: flex;
     align-items: center;
@@ -670,92 +658,7 @@ textarea {
     }
 }
 
-// ============================================================
-//  FORMULAIRE (addTicketView)
-// ============================================================
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-
-    @media (max-width: 760px) {
-        grid-template-columns: 1fr;
-    }
-
-    &--full {
-        grid-column: 1 / -1;
-    }
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-
-    label {
-        font-size: 12px;
-        font-weight: 500;
-        color: $text-secondary;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-
-        .required {
-            color: $blue;
-            margin-left: 2px;
-        }
-    }
-}
-
-.form-control {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid $border-subtle;
-    border-radius: $border-radius-md;
-    color: $text-primary;
-    font-size: 13.5px;
-    padding: 10px 14px;
-    transition: all $transition-fast;
-    width: 100%;
-    outline: none;
-    appearance: none;
-    -webkit-appearance: none;
-
-    &::placeholder {
-        color: $text-muted;
-    }
-
-    &:hover {
-        border-color: $border-default;
-    }
-
-    &:focus {
-        border-color: rgba($blue, 0.5);
-        background: $blue-dim;
-        box-shadow: 0 0 0 3px rgba($blue, 0.08);
-    }
-
-    option {
-        background: $surface-2;
-        color: $text-primary;
-    }
-}
-
-select.form-control {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23555b6e' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 34px;
-    cursor: pointer;
-}
-
-textarea.form-control {
-    resize: vertical;
-    min-height: 90px;
-    line-height: 1.6;
-}
-
-// ============================================================
-//  ALERTES
-// ============================================================
+// Altertes
 .alert {
     display: flex;
     align-items: flex-start;
@@ -785,9 +688,7 @@ textarea.form-control {
     }
 }
 
-// ============================================================
-//  ÉTAT VIDE
-// ============================================================
+// Etat Vide
 .empty-state {
     display: flex;
     flex-direction: column;
@@ -813,9 +714,7 @@ textarea.form-control {
     }
 }
 
-// ============================================================
-//  SCROLLBAR GLOBALE
-// ============================================================
+// ScrollBar
 ::-webkit-scrollbar {
     width: 5px;
     height: 5px;

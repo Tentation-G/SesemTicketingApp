@@ -314,5 +314,5 @@ filterFamilles(document.getElementById('idMarque').value);
 <?php
 $content = ob_get_clean();
 $title   = 'Nouveau ticket';
-require('views/layout/baseLayout.php');
+require_once('views/layout/baseLayout.php');
 ?>
